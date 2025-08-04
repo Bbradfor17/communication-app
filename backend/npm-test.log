@@ -1,0 +1,8 @@
+
+> emergency-backend@1.0.0 start
+> node server.js
+
+🚀 Emergency backend running on localhost:4000
+Health: http://localhost:4000/api/health
+Environment: undefined
+Railway URL: Not set
