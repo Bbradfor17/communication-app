@@ -3,6 +3,7 @@ const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
 
 // CORS configuration
 app.use(cors({
@@ -12,6 +13,18 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Root endpoint for testing
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: '🚨 Emergency server is running!',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+    port: process.env.PORT,
+    railwayUrl: process.env.RAILWAY_STATIC_URL
+  });
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -91,9 +104,11 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Endpoint not found' });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Emergency backend running on port ${PORT}`);
-  console.log(`Health: http://localhost:${PORT}/api/health`);
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Emergency backend running on ${HOST}:${PORT}`);
+  console.log(`Health: http://${HOST}:${PORT}/api/health`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
+  console.log(`Railway URL: ${process.env.RAILWAY_STATIC_URL || 'Not set'}`);
 });
 
 module.exports = app;
